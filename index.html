@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>i was bored okay!</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-weight: normal;
+            transition: opacity 0.3s;
+        }
+        .input-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        input {
+            width: 300px;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 30px;
+            background-color: #2a2a2a;
+            color: #e0e0e0;
+            outline: none;
+            font-size: 16px;
+            transition: box-shadow 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+        input:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+        }
+        input.typing {
+            animation: typingAnimation 1s infinite alternate;
+        }
+        @keyframes typingAnimation {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.03); }
+        }
+        button {
+            padding: 10px;
+            border: none;
+            border-radius: 30px;
+            background-color: #000;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
+            width: 120px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+        button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+    <h1 id="title">send me a message</h1>
+    <div class="input-container">
+        <input type="text" id="messageInput" placeholder="Share your thoughts..." onfocus="startTyping()" onblur="stopTyping()" />
+    </div>
+    <button class="submit" type="submit" onclick="submitMessage()">Send!</button>
+
+    <script>
+     function submitMessage() {
+    const input = document.getElementById('messageInput');
+    const title = document.getElementById('title');
+    const message = input.value;
+
+    if (message) {
+        fetch('https://discord.com/api/webhooks/1290276304402255883/89ljIVcPfoGO3VKzDNaIkepEKQPUyvUkK8ePI4CG2p6ofrVw9thSI4FTOe2SPTUgq1BH', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ content: message })
+        })
+        .then(response => {
+            if (response.ok) {
+                title.textContent = 'sent, hope its not something rude!';
+                setTimeout(() => {
+                    title.textContent = 'send me a message';
+                }, 2000);
+                input.value = '';
+                stopTyping();
+            } else {
+                title.textContent = 'failed to send message';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            title.textContent = 'sent, hope its not something rude!!';
+        });
+    }
+}
+
+    </script>
+</body>
+</html>
